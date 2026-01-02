@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- ========== 对齐：补充apple移动端适配标签 ========== -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-touch-callout" content="none">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400&display=swap">
+    <title>糊纸步骤</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+
+        html, body {
+            overflow: hidden !important;
+            height: 100% !important;
+            touch-action: none !important;
+            -webkit-overflow-scrolling: auto !important;
+        }
+
+        /* ========== 核心对齐：body布局恢复与扎制骨架一致 ========== */
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-image: url("背景图/花纹背景.jpg");
+            background-size: cover;
+            background-position: center;
+            font-family: "Noto Sans SC", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 对齐：恢复center，取消flex-start */
+            background-repeat: no-repeat;
+            position: relative;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: opacity 0.2s ease; /* 对齐：时长改为0.2s */
+            padding: 15px; /* 对齐：统一padding写法 */
+        }
+
+        /* ========== 对齐：音乐图标样式完全同步 ========== */
+        .music-icon {
+            position:absolute;
+            top:30px;
+            right:30px;
+            width:32px;
+            height:32px;
+            background-image:url("封面/资源\ 24@0.5x.webp");
+            background-size:100% 100%;
+            background-repeat:no-repeat;
+            background-position: center;
+            cursor:pointer;
+            z-index: 999;
+            transition: transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            /* 对齐：新增padding/margin/will-change */
+            padding: 8px;
+            margin: -8px;
+            will-change: transform;
+        }
+
+        .music-icon.active{
+            animation: rotateMusic 3s linear infinite;
+            /* 对齐：新增3D加速 */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @keyframes rotateMusic{
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== 对齐：步骤标签样式完全同步 ========== */
+        .step-tabs {
+            display:flex;
+            gap: 8vw;
+            margin: 5vh 0 2vh 0; /* 对齐：top margin改为5vh */
+            align-items: center;
+            flex-shrink: 0;
+            will-change: transform; /* 对齐：新增硬件加速 */
+        }
+
+        .step-tab.hu {
+            width:21vw;
+            height:21vw;
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 50%;
+            background: url("风筝制作/资源 31@0.5x.webp")no-repeat center;
+            background-size: contain;
+            cursor:pointer;
+            transition: all 0.2s ease-out; /* 对齐：时长改为0.2s，ease-out */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .step-tab.za{
+            width:15vw;
+            height:15vw;
+            max-width: 80px;
+            max-height: 80px;
+            background: url("风筝制作/资源\ 27@0.5x.webp")no-repeat center;
+            background-size: contain;
+            cursor:pointer;
+            transition: all 0.2s ease-out; /* 对齐：时长改为0.2s，ease-out */
+        }
+
+        .step-tab.hui{
+            width:15vw;
+            height:15vw;
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 50%;
+            background: url("风筝制作/资源\ 29@0.5x.webp")no-repeat center;
+            background-size: contain;
+            cursor:pointer;
+            transition: all 0.2s ease-out; /* 对齐：时长改为0.2s，ease-out */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .step-tab.active{
+            background-color: transparent;
+        }
+
+        /* ========== 对齐：骨架容器样式完全同步 ========== */
+        .skeleton-container {
+            width:85%;
+            height: 38vh; /* 对齐：高度改为38vh */
+            margin-bottom: 1vh; /* 对齐：margin-bottom改为1vh */
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .skeleton-img {
+            width:100%;
+            height:100%;
+            object-fit: contain;
+            display:none;
+            position: absolute;
+            z-index: 10;
+            left:50%;
+            top:50%;
+            transform: translate(-50%,-50%);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out; /* 对齐：时长改为0.2s，ease-out */
+            opacity: 1;
+            backface-visibility: hidden;
+        }
+
+        .skeleton-img.fade-out{
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.98);
+        }
+
+        /* ========== 对齐：目标图片放大样式与扎制骨架一致 ========== */
+        #finalSkeleton,
+        #paste-swallow, #paste-butterfly, #paste-fish,
+        #cloth-swallow, #cloth-butterfly, #cloth-fish,
+        #paper-swallow, #paper-butterfly, #paper-fish {
+            transform: translate(-50%, -50%) scale(1.1); /* 对齐：放大值改为1.1 */
+            object-fit: cover;
+            object-position: center;
+        }
+
+        #finalSkeleton {
+            display: block;
+            transform: translate(-50%, -50%) scale(1.1); /* 对齐：放大值改为1.1 */
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* ========== 核心对齐：选项框样式完全同步 ========== */
+        .option-box {
+            width: 95%; /* 对齐：宽度改为95% */
+            height: 28vw; /* 对齐：高度改为28vw */
+            max-height: 160px; /* 对齐：max-height改为160px */
+            background: url("风筝制作/资源\ 80@0.5x.webp");
+            background-size: 100% 100%;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2vw 4vw; /* 对齐：padding改为2vw 4vw */
+            position: relative;
+            z-index: 20;
+            touch-action: manipulation;
+            margin-top: 9vh; /* 对齐：margin-top改为9vh */
+            margin-bottom: 3vh; /* 对齐：新增margin-bottom */
+            flex-shrink: 0;
+            overflow: hidden; /* 对齐：新增overflow:hidden */
+        }
+
+        .option-box::before {
+            content: "依次点击裱糊面料";
+            position: absolute;
+            top: -2.5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(14px, 4vw, 18px); /* 对齐：字体大小改为14-18px */
+            color: #000;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 400;
+        }
+
+        /* ========== 对齐：选项项样式完全同步 ========== */
+        .option-item {
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s, transform 0.15s; /* 对齐：拆分transition */
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+            padding: 8px;
+            margin: 0; /* 对齐：margin改为0 */
+            width: 18vw; /* 对齐：宽度改为18vw */
+            max-width: 80px; /* 对齐：max-width改为80px */
+            flex-shrink: 0;
+        }
+
+        .option-item.available {
+            pointer-events: all;
+            opacity: 0.9;
+        }
+
+        .option-item.available:active {
+            transform: scale(0.95);
+            opacity: 1;
+        }
+
+        .option-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ========== 对齐：选项图标样式完全同步 ========== */
+        .option-icon {
+            width:12vw; /* 对齐：宽度改为12vw */
+            height:12vw; /* 对齐：高度改为12vw */
+            max-width: 60px; /* 对齐：max-width改为60px */
+            max-height: 60px; /* 对齐：max-height改为60px */
+            object-fit: contain;
+            margin-bottom: 1vw;
+            backface-visibility: hidden;
+            display: block; /* 对齐：新增display:block */
+        }
+
+        /* ========== 对齐：选项文字样式完全同步 ========== */
+        .option-text {
+            font-size: clamp(14px, 4vw, 18px); /* 对齐：字体大小改为14-18px */
+            color:#000;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+            white-space: nowrap; /* 对齐：新增文字不换行 */
+            overflow: hidden; /* 对齐：新增溢出隐藏 */
+            text-overflow: ellipsis; /* 对齐：新增省略号 */
+        }
+
+        /* ========== 对齐：按钮组样式基础同步 ========== */
+        .btn-group {
+            display:flex;
+            gap: 20vw;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        /* ========== 对齐：按钮样式完全同步 ========== */
+        .page-btn {
+            padding: 2vw 5vw;
+            background: url("风筝制作/资源 89@0.5x.webp");
+            background-size: 100% 100%;
+            font-size: clamp(14px, 4vw, 18px); /* 对齐：字体大小改为14-18px */
+            color: #000;
+            cursor: pointer;
+            border:none;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            opacity: 0.5;
+            pointer-events: none;
+            will-change: opacity; /* 对齐：新增will-change */
+            min-width: 90px; /* 对齐：min-width改为90px */
+            height: 45px; /* 对齐：height改为45px */
+        }
+
+        .page-btn.enable {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .page-btn.enable:active{
+            transform: scale(0.95);
+        }
+
+        /* ========== 对齐：小屏适配样式完全同步 ========== */
+        @media screen and (max-width:375px){
+            .music-icon{
+                width:28px;
+                height:28px;
+                top:20px;
+                right:20px;
+            }
+            .option-box{
+                height: 32vw; /* 对齐：高度改为32vw */
+                margin-top: 8vh; /* 对齐：margin-top改为8vh */
+                margin-bottom: 2vh; /* 对齐：margin-bottom改为2vh */
+                padding: 2vw 2vw; /* 对齐：padding改为2vw 2vw */
+            }
+            .option-item{
+                width: 17vw; /* 对齐：宽度改为17vw */
+            }
+            .option-icon{
+                width: 10vw; /* 对齐：宽度改为10vw */
+                height: 10vw; /* 对齐：高度改为10vw */
+            }
+            .skeleton-container{
+                height: 35vh; /* 对齐：高度改为35vh */
+            }
+            .btn-group{
+                gap: 15vw;
+            }
+            /* 对齐：目标图片放大值保持1.1 */
+            #paste-swallow, #paste-butterfly, #paste-fish,
+            #cloth-swallow, #cloth-butterfly, #cloth-fish,
+            #paper-swallow, #paper-butterfly, #paper-fish {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* ========== 对齐：大屏适配样式完全同步 ========== */
+        @media screen and (min-width:768px){
+            .step-tabs{
+                gap: 50px;
+            }
+            .option-box{
+                max-height: 180px; /* 对齐：max-height改为180px */
+                padding: 2vw 5vw; /* 对齐：padding改为2vw 5vw */
+                margin-top: 7vh; /* 对齐：margin-top改为7vh */
+            }
+            .option-item{
+                width: 15vw; /* 对齐：宽度改为15vw */
+                max-width: 90px; /* 对齐：max-width改为90px */
+            }
+            .option-icon{
+                max-width: 70px; /* 对齐：max-width改为70px */
+                max-height: 70px; /* 对齐：max-height改为70px */
+            }
+            .btn-group{
+                gap: 120px;
+            }
+            .page-btn{
+                min-width: 100px;
+                height: 50px; /* 对齐：height改为50px */
+            }
+            .skeleton-container{
+                height: 45vh;
+            }
+            /* 对齐：大屏下目标图片放大值改为1.35 */
+            #paste-swallow, #paste-butterfly, #paste-fish,
+            #cloth-swallow, #cloth-butterfly, #cloth-fish,
+            #paper-swallow, #paper-butterfly, #paper-fish,
+            #finalSkeleton {
+                transform: translate(-50%, -50%) scale(1.35);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== 对齐：音频标签属性完全同步 ========== -->
+    <audio id="bgMusic" loop preload="auto" playsinline>
+        <source src="music.m4a" type="audio/mp4">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-icon" id="musicIcon"></div>
+
+    <div class="step-tabs">
+        <div class="step-tab za"></div>
+        <div class="step-tab hu"></div>
+        <div class="step-tab hui"></div>
+    </div>
+
+    <div class="skeleton-container" id="skeletonContainer">
+        <img src="骨架/骨架/IMG_2713.PNG" alt="燕子骨架" class="skeleton-img" id="finalSkeleton">
+        <img src="风筝制作/步骤图/燕 浆糊.PNG" alt="燕子浆糊" class="skeleton-img" id="paste-swallow">
+        <img src="风筝制作/步骤图/蝶 浆糊.PNG" alt="蝴蝶浆糊" class="skeleton-img" id="paste-butterfly">
+        <img src="风筝制作/步骤图/鱼 浆糊.PNG" alt="鱼浆糊" class="skeleton-img" id="paste-fish">
+        <img src="风筝制作/步骤图/燕 纱布.PNG" alt="燕子纱布" class="skeleton-img" id="cloth-swallow">
+        <img src="风筝制作/步骤图/蝶 纱布.PNG" alt="蝴蝶纱布" class="skeleton-img" id="cloth-butterfly">
+        <img src="风筝制作/步骤图/鱼 纱布.PNG" alt="鱼纱布" class="skeleton-img" id="cloth-fish">
+        <img src="风筝制作/步骤图/燕 宣纸.PNG" alt="燕子宣纸" class="skeleton-img" id="paper-swallow">
+        <img src="风筝制作/步骤图/蝶 宣纸.PNG" alt="蝴蝶宣纸" class="skeleton-img" id="paper-butterfly">
+        <img src="风筝制作/步骤图/鱼 宣纸.PNG" alt="鱼宣纸" class="skeleton-img" id="paper-fish">
+    </div>
+
+    <div class="option-box">
+        <div class="option-item" data-step="1" data-type="paste">
+            <img src="风筝制作/资源 39@0.5x.webp" alt="浆糊图标" class="option-icon">
+            <span class="option-text">浆糊</span>
+        </div>
+        <div class="option-item" data-step="2" data-type="cloth">
+            <img src="风筝制作/资源 40@0.5x.webp" alt="纱布图标" class="option-icon">
+            <span class="option-text">纱布</span>
+        </div>
+        <div class="option-item" data-step="3" data-type="paper">
+            <img src="风筝制作/资源 38@0.5x.webp" alt="宣纸图标" class="option-icon">
+            <span class="option-text">宣纸</span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="page-btn enable" id="prevBtn">上一步</button>
+        <button class="page-btn" id="nextBtn" disabled>下一步</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== 对齐：基础变量定义风格 ==========
+            const urlParams = new URLSearchParams(window.location.search);
+            const kiteType = urlParams.get('type') || 'swallow';
+            const totalSteps = 3; // 糊纸步骤总数3
+            const clickedSteps = new Set();
+
+            // ========== 对齐：DOM元素获取方式 ==========
+            const optionItems = document.querySelectorAll('.option-item');
+            const skeletonImgs = document.querySelectorAll('.skeleton-img');
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const musicIcon = document.getElementById("musicIcon");
+            const bgMusic = document.getElementById("bgMusic");
+            const finalSkeleton = document.getElementById('finalSkeleton');
+            
+            // ========== 核心对齐：音乐逻辑完全同步（localStorage保存状态） ==========
+            let isMusicPlaying = localStorage.getItem('musicPlaying') === 'true';
+            const savedTime = parseFloat(localStorage.getItem('musicTime') || 0);
+            let progressTimer = null;
+            let isPlaying = isMusicPlaying; // 对齐：保留兼容变量
+
+            // 对齐：保存音乐状态函数
+            function saveMusicState() {
+                localStorage.setItem('musicPlaying', isMusicPlaying ? 'true' : 'false');
+                localStorage.setItem('musicTime', bgMusic.currentTime.toString());
+                localStorage.setItem('musicHasInteraction', 'true');
+            }
+
+            // 对齐：实时保存进度函数
+            function startProgressTimer() {
+                if (progressTimer) clearInterval(progressTimer);
+                progressTimer = setInterval(() => {
+                    if (bgMusic.currentTime > 0 && !bgMusic.paused) {
+                        saveMusicState();
+                    }
+                }, 100);
+            }
+
+            // 对齐：初始化音频函数（恢复进度和状态）
+            function initAudio() {
+                if (bgMusic.readyState >= 2) {
+                    setAudioProgress();
+                } else {
+                    bgMusic.addEventListener('canplaythrough', setAudioProgress, { once: true });
+                }
+
+                function setAudioProgress() {
+                    if (!isNaN(savedTime) && savedTime > 0) {
+                        bgMusic.currentTime = savedTime;
+                    }
+                    
+                    if (isPlaying) {
+                        musicIcon.classList.add('active');
+                        bgMusic.play().catch(err => {
+                            console.log("音频自动播放受限，点击音乐图标继续:", err);
+                        });
+                    }
+                }
+                startProgressTimer();
+            }
+
+            // 对齐：音乐开关控制函数
+            function toggleMusic() {
+                isMusicPlaying = !isMusicPlaying;
+                isPlaying = isMusicPlaying;
+                
+                if (isMusicPlaying) {
+                    bgMusic.play().then(() => {
+                        musicIcon.classList.add('active');
+                        saveMusicState();
+                    }).catch(err => {
+                        console.log("播放失败:", err);
+                        isMusicPlaying = false;
+                        isPlaying = false;
+                    });
+                } else {
+                    bgMusic.pause();
+                    musicIcon.classList.remove('active');
+                    saveMusicState();
+                }
+            }
+
+            // ========== 对齐：禁止滑动逻辑 ==========
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, { passive: false });
+
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, { passive: false });
+
+            // ========== 对齐：选项点击逻辑（调整动画时长为200ms） ==========
+            function handleOptionClick(e) {
+                e.stopPropagation();
+                if (e.type === 'touchstart') e.preventDefault();
+
+                const item = this;
+                const currentStep = parseInt(item.getAttribute('data-step'));
+
+                // 对齐：增强防错校验
+                if (!item.classList.contains('available') || isNaN(currentStep) || currentStep < 1 || currentStep > totalSteps) {
+                    return;
+                }
+
+                clickedSteps.add(currentStep);
+                skeletonImgs.forEach(img => img.classList.add('fade-out'));
+
+                // 对齐：动画时长改为200ms
+                setTimeout(() => {
+                    skeletonImgs.forEach(img => {
+                        img.style.display = 'none';
+                        img.classList.remove('fade-out');
+                    });
+
+                    const optionType = item.getAttribute('data-type');
+                    const targetImgId = `${optionType}-${kiteType}`;
+                    
+                    const targetImg = document.getElementById(targetImgId);
+                    if (targetImg) {
+                        targetImg.style.display = 'block';
+                        targetImg.style.opacity = 1;
+                        // 对齐：保留放大效果的过渡动画
+                        targetImg.style.transform = `translate(-50%, -50%) scale(1)`;
+                        setTimeout(() => {
+                            targetImg.style.transform = `translate(-50%, -50%) scale(1.1)`;
+                        }, 50);
+                    } else {
+                        console.warn(`未找到对应糊纸图: ${targetImgId}`);
+                    }
+
+                    item.classList.add('used');
+                    item.classList.remove('available');
+
+                    const nextStep = currentStep + 1;
+                    const nextItem = Array.from(optionItems).find(el => parseInt(el.dataset.step) === nextStep);
+                    if (nextItem) {
+                        nextItem.classList.add('available');
+                        nextItem.classList.remove('used');
+                    }
+
+                    // 最后一步解锁下一步
+                    if (currentStep === totalSteps) {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.add('enable');
+                    }
+                }, 200); // 对齐：时长改为200ms
+            }
+
+            // ========== 对齐：上一步/下一步逻辑（增加音乐状态保存） ==========
+            function handlePrevClick(e) {
+                e.stopPropagation();
+                if (e.type === 'touchstart') e.preventDefault();
+                // 对齐：跳转前保存音乐状态
+                saveMusicState();
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = `page5.html?type=${kiteType}`;
+                }, 200); // 对齐：时长改为200ms
+            }
+
+            function handleNextClick(e) {
+                e.stopPropagation();
+                if (e.type === 'touchstart') e.preventDefault();
+                // 对齐：跳转前保存音乐状态
+                saveMusicState();
+                if (clickedSteps.has(totalSteps)) {
+                    document.body.style.opacity = 0;
+                    setTimeout(() => {
+                        window.location.href = `page7.html?type=${kiteType}`;
+                    }, 200); // 对齐：时长改为200ms
+                }
+            }
+
+            // ========== 对齐：图片预加载函数 ==========
+            const preloadImages = () => {
+                skeletonImgs.forEach(img => {
+                    const preloadImg = new Image();
+                    preloadImg.src = img.src;
+                    preloadImg.onerror = () => console.warn(`图片预加载失败: ${img.src}`);
+                });
+                document.querySelectorAll('.option-icon').forEach(icon => {
+                    const preloadImg = new Image();
+                    preloadImg.src = icon.src;
+                    preloadImg.onerror = () => console.warn(`图标预加载失败: ${icon.src}`);
+                });
+            };
+            setTimeout(preloadImages, 300);
+
+            // ========== 初始化逻辑 ==========
+            optionItems[0].classList.add('available');
+            prevBtn.classList.add('enable');
+            nextBtn.disabled = true;
+            // 替换初始骨架图
+            function replaceFinalSkeleton() {
+                const skeletonSrcMap = {
+                    swallow: "骨架/骨架/IMG_2713.PNG",
+                    butterfly: "骨架/骨架/IMG_2721.PNG",
+                    fish: "骨架/骨架/IMG_2717.PNG",
+                };
+                finalSkeleton.src = skeletonSrcMap[kiteType] || skeletonSrcMap.swallow;
+            }
+            replaceFinalSkeleton();
+
+            // ========== 对齐：事件绑定方式 ==========
+            optionItems.forEach(item => {
+                item.addEventListener('touchstart', handleOptionClick, { passive: false });
+                item.addEventListener('click', handleOptionClick);
+            });
+
+            prevBtn.addEventListener('touchstart', handlePrevClick, { passive: false });
+            prevBtn.addEventListener('click', handlePrevClick);
+            nextBtn.addEventListener('touchstart', handleNextClick, { passive: false });
+            nextBtn.addEventListener('click', handleNextClick);
+
+            // 对齐：音乐按钮事件绑定
+            musicIcon.addEventListener('click', toggleMusic);
+            musicIcon.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                toggleMusic();
+            }, { passive: false });
+
+            // ========== 对齐：页面可见性处理 ==========
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && isMusicPlaying) {
+                    bgMusic.pause();
+                    isMusicPlaying = false;
+                    isPlaying = false;
+                    musicIcon.classList.remove('active');
+                    saveMusicState();
+                }
+            });
+
+            // ========== 对齐：页面卸载处理 ==========
+            window.addEventListener('beforeunload', () => {
+                saveMusicState();
+                clearInterval(progressTimer);
+                bgMusic.pause();
+            });
+
+            // ========== 对齐：图片加载错误处理 ==========
+            skeletonImgs.forEach(img => {
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    console.error(`图片加载失败: ${this.src}`);
+                };
+            });
+
+            document.querySelectorAll('.option-icon').forEach(icon => {
+                icon.onerror = function() {
+                    this.style.opacity = 0.5;
+                    console.error(`图标加载失败: ${this.src}`);
+                };
+            });
+
+            // ========== 对齐：禁止拖拽/选中等默认行为 ==========
+            document.addEventListener('dragstart', (e) => e.preventDefault());
+            document.addEventListener('selectstart', (e) => e.preventDefault());
+
+            // ========== 对齐：页面加载完成后初始化音频 ==========
+            window.addEventListener('load', initAudio);
+        });
+    </script>
+</body>
+</html>

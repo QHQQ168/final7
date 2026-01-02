@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,body{
+            overflow:hidden !important;
+            height: 100% !important;     /* 固定高度，避免滚动条 */
+            touch-action: none !important; /* 禁用所有触摸行为（滑动、缩放等） */
+            -webkit-overflow-scrolling: auto !important; 
+        }
+
+        .page-home{
+            width:100vw;
+            height:100vh;
+            background-image:url("背景图/背景图.jpg");
+            background-size:cover;
+            background-position:center;
+            position:relative;
+            overflow: hidden !important;
+            background-repeat: no-repeat;
+        }
+
+        .bg-circle{
+            position:absolute;
+            top:10%;
+            right:5%;
+            width:70%;
+            height:70%;
+            background-image:url("封面/资源\ 8@0.5x.webp");
+            background-size:contain;
+            background-repeat:no-repeat;
+            background-position: center right;
+            z-index:1;
+        }
+
+        .line-1{
+            position:absolute;
+            top:50%;
+            left:0%;
+            width:100%;
+            max-width:500px;
+            min-width: 400px;
+            height:100px;
+            background-image: url("封面/资源\ 14@0.5x.webp");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: left center;
+
+            z-index: 1.5;
+        }
+
+        .line-2{
+            position:absolute;
+            bottom:25%;
+            right:0%;
+            width:40%;
+            height:100px;
+            background-image: url("封面/资源\ 3@0.5x.webp");
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1.5;
+        }
+
+        .line-3{
+            position:absolute;
+            bottom:10%;
+            left:0%;
+            width:40%;
+            max-width:500px;
+            min-width:300px;
+            height:100px;
+            background-image: url("封面/资源\ 4@0.5x.webp");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: left center;
+            z-index: 1.5;
+        }
+
+        .line-4{
+            position: absolute;
+            top:45%;
+            right:0%;
+            width:40%;
+            height:100px;
+            background-image: url("封面/资源\ 15@0.5x.webp");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right center;
+            padding-right: 0;
+            margin-right: 0;
+            z-index: 2;
+        }
+
+        .kite-img{
+            width:70%;
+            position:absolute;
+            top:15%;
+            left:0%;
+            height:auto;
+            z-index:2;
+            animation:float 6s ease-in-out infinite;
+        }
+
+        .text-area{
+            position:absolute;
+            right:15%;
+            top:13%;
+            z-index:3;
+        }
+
+        .text-area .text-img{
+            width:100%;
+            max-width:100px;
+            min-width:50px;
+        }
+
+        .main-title{
+            position:absolute;
+            right:0%;
+            bottom:10%;
+            z-index: 3;
+        }
+
+        .yuan-with-pattern{
+            width:55%;
+            max-width:240px;
+            min-width:160px;
+        }
+
+        .feiyi-tag{
+            position:absolute;
+            right:0%;
+            top:20px;
+            width:12%;
+            max-width:28px;
+            min-width:20px;
+            height:auto;
+            background-image:url("封面/资源\ 5@0.5x.webp");
+            background-size:contain;
+            background-repeat:no-repeat;
+            transform:rotate(10deg);
+            z-index:4;
+        }
+
+        .slide-tip{
+            position:absolute;
+            bottom:6%;
+            left:50%;
+            transform:translateX(-50%);
+            z-index: 3;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slide-tip-img{
+            width:20%;
+            max-width:90px;
+            min-width:60px;
+            animation:bounce 1.5s infinite;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .music-icon{
+            position:absolute;
+            top:30px;
+            right:30px;
+            width:32px;
+            height:32px;
+            background-image:url("封面/资源\ 24@0.5x.webp");
+            background-size:100% 100%;
+            background-repeat:no-repeat;
+            background-position: center;
+            cursor:pointer;
+            z-index: 999;
+            transition: transform 0.2s ease;
+        }
+
+        .music-icon.active{
+            transform: rotate(360deg);
+            animation: rotateMusic 3s linear infinite;
+        }
+
+        @keyframes float{
+            0%{transform: translateY(0px) rotate(0deg);}
+            25%{transform: translateY(-8px) rotate(1deg);}
+            50%{transform: translateY(-10px) rotate(2deg);}
+            75%{transform: translateY(-8px) rotate(1deg);}
+            100%{transform: translateY(0px) rotate(0deg);}
+        }
+
+        @keyframes bounce{
+            0%,100%{transform: translateY(0);}
+            50%{transform: translateY(-8px);}
+        }
+
+        @keyframes rotateMusic{
+            from{transform: rotate(0deg);}
+            to{transform: rotate(360deg);}
+        }
+
+        @media screen and (max-width: 375px) {
+            .kite-img{
+                width:50%;
+                top:20%;
+                left:15%;
+            }
+            .main-title{
+                right:5%;
+                bottom:8%;
+            }
+            .line-1{
+                top:45%;
+                width:70%;
+            }
+            .line-4{
+                top:40%;
+            }
+            .slide-tip-img{
+                width:15%;
+            }
+            .music-icon{
+                width:28px;
+                height:28px;
+                top:20px;
+                right:20px;
+            }
+        }
+
+        /* 响应式适配 - 大屏平板 */
+        @media screen and (min-width: 768px) {
+            .kite-img{
+                width:50%;
+                top:10%;
+                left:25%;
+            }
+            .text-area{
+                right:20%;
+                top:10%;
+            }
+            .main-title{
+                right:15%;
+                bottom:15%;
+            }
+            .slide-tip-img{
+                width:15%;
+            }
+            .music-icon{
+                width:40px;
+                height:40px;
+                top:30px;
+                right:30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-home" id="pageHome">
+        <div class="bg-circle"></div>
+        <div class="line-1"></div>
+        <div class="line-2"></div>
+        <div class="line-3"></div>
+        <div class="line-4"></div>
+        <img src="封面/资源 7@0.5x.webp" alt="潍坊风筝" class="kite-img">
+        <div class="text-area">
+            <img src="封面/资源 58@0.5x.webp" alt="文字区域" class="text-img">
+        </div>
+        <div class="main-title">
+            <img src="封面/资源 5@0.5x.webp" alt="鸢缘" class="yuan-with-pattern">
+            <div class="feiyi-tag"></div>
+        </div>
+        <div class="slide-tip">
+            <img src="封面/资源 16@0.5x.webp" alt="向上滑动" class="slide-tip-img">
+        </div>
+        <div class="music-icon" id="musicIcon">
+        </div>
+    </div>
+
+    <script>
+        // ========== 核心1：拦截所有触摸滑动事件，禁止默认行为 ==========
+        // 拦截touchmove（滑动的核心事件）
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault(); // 禁止所有触摸滑动的默认行为
+            e.stopPropagation(); // 阻止事件冒泡
+        }, { passive: false }); // 必须设置passive: false，才能生效preventDefault
+
+        // 拦截touchstart/touchend的额外行为（防止惯性滚动）
+        document.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+
+        let startY=0;
+        // 增加passive: true提升滑动性能
+        document.addEventListener('touchstart',(e)=>{
+            startY=e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend',(e)=>{
+            const endY=e.changedTouches[0].clientY;
+            // 增加阈值，避免误触
+            if(startY-endY>80){
+                // 延迟跳转，增加滑动反馈
+                saveMusicState(); // 跳转前强制保存音乐状态
+                setTimeout(()=>{
+                    window.location.href="page2-3.html";
+                }, 100);
+            }
+        });
+
+        // ========== 音乐逻辑重构（核心修改部分） ==========
+        const musicIcon = document.getElementById('musicIcon');
+        // 创建音频实例并设置循环
+        const bgMusic = new Audio("music.m4a");
+        bgMusic.loop = true; // 设置循环播放
+        bgMusic.preload = "metadata"; // 预加载音频元数据
+        
+        // 初始化状态
+        let isPlaying = localStorage.getItem('musicPlaying') === 'true' || false;
+        const savedTime = parseFloat(localStorage.getItem('musicTime') || 0);
+        let progressTimer = null;
+
+        // 保存音乐状态到本地存储
+        function saveMusicState() {
+            localStorage.setItem('musicPlaying', isPlaying ? 'true' : 'false');
+            localStorage.setItem('musicTime', bgMusic.currentTime.toString());
+            localStorage.setItem('musicHasInteraction', 'true'); // 标记已有用户交互
+        }
+
+        // 实时保存播放进度（100ms间隔，确保进度精准）
+        function startProgressTimer() {
+            if (progressTimer) clearInterval(progressTimer);
+            progressTimer = setInterval(() => {
+                if (bgMusic.currentTime > 0 && !bgMusic.paused) {
+                    saveMusicState();
+                }
+            }, 100);
+        }
+
+        // 恢复音乐状态
+        function restoreMusicState() {
+            // 恢复播放进度
+            if (!isNaN(savedTime) && savedTime > 0) {
+                bgMusic.currentTime = savedTime;
+            }
+            // 恢复播放状态（仅当有用户交互时）
+            if (isPlaying && localStorage.getItem('musicHasInteraction') === 'true') {
+                bgMusic.play().then(() => {
+                    musicIcon.classList.add('active');
+                }).catch(err => {
+                    console.log("自动播放受限，需点击音乐按钮播放:", err);
+                    isPlaying = false;
+                });
+            }
+            startProgressTimer();
+        }
+
+        // 切换音乐播放/暂停
+        function toggleMusic() {
+            try {
+                if (isPlaying) {
+                    bgMusic.pause();
+                    musicIcon.classList.remove('active');
+                } else {
+                    bgMusic.play();
+                    musicIcon.classList.add('active');
+                    localStorage.setItem('musicHasInteraction', 'true'); // 标记首次交互
+                }
+                isPlaying = !isPlaying;
+                saveMusicState(); // 切换后立即保存状态
+            } catch (err) {
+                console.error("音乐播放失败：", err);
+                alert("音频播放失败，请检查音频文件路径");
+            }
+        }
+
+        // 页面加载完成后恢复音乐状态
+        window.addEventListener('load', restoreMusicState);
+        
+        // 音乐按钮点击事件
+        musicIcon.addEventListener('click', toggleMusic);
+        
+        // 页面隐藏时暂停音乐，节省资源
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isPlaying) {
+                bgMusic.pause();
+                isPlaying = false;
+                musicIcon.classList.remove('active');
+                saveMusicState();
+            }
+        });
+
+        // 页面离开时强制保存状态
+        window.addEventListener('beforeunload', () => {
+            saveMusicState();
+            clearInterval(progressTimer);
+        });
+
+        document.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }, { passive: false });
+    </script>
+    
+</body>
+</html>
